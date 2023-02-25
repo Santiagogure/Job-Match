@@ -1,0 +1,109 @@
+
+##### Agregar los roles y las tecnologias de usuario en particular
+// mi sugerencia es que se elimine lo que tenia y se agregue lo nuevo 
+POST https://backapijobs-production-ad45.up.railway.app/api/v1/rol_user
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiZW1haWwiOiJKdWFuUGVkcm9AY29ycmVvLmNvIiwiaWF0IjoxNjc2OTk4MDI1LCJleHAiOjE2NzczNTgwMjV9.bNbkkMaLobEEoPIrC39SKTvqQUY7ou9suiijOXTkJAy040jQloZZnJdlM-FVw15be9HXyx-x-FmifH90gTnIJQ
+Content-Type: application/json
+
+[{
+"id_rol":2,
+"id_tecnology":[
+1,2,3
+]
+}]
+
+
+
+##### Registrar un usuario
+POST https://backapijobs-production-ad45.up.railway.app/api/v1/auth/register
+Content-Type: application/json
+
+{"email": "crisilvalla@gmail.com", "password": "a1b2c3A$"}
+
+
+##### hacer Login
+POST https://backapijobs-production-ad45.up.railway.app/api/v1/auth/login
+Content-Type: application/json
+
+{"email": "yulyana77@hotmail.com", "password": "a1b2c3A$"}
+
+##### get user information con base ene le token
+GET https://backapijobs-production-ad45.up.railway.app/api/v1/users
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjUsImVtYWlsIjoianVhbkBjb3JyZW8uY29tIiwiaWF0IjoxNjc2OTg2NzIzLCJleHAiOjE2NzczNDY3MjN9.QudFIJhtnHfa_kkK3mjkBTT_Pf_xQaWwdQWe7aniwvXEyA83H_1cVcdYV6HWz6j-Btg3vdYqt099FeepiPSLlw
+Content-Type: application/json
+
+
+##### get user information complementary con base ene le token
+GET https://backapijobs-production-ad45.up.railway.app/api/v1/user_tecnology
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjUsImVtYWlsIjoianVhbkBjb3JyZW8uY29tIiwiaWF0IjoxNjc2OTgzMjM0LCJleHAiOjE2NzczNDMyMzR9.LM1ITqHZBIz5reGe6Ep92aoyN5lGREtj4NNqxAGqktfAwUm7taU_7R1kjm-1VnVm1moKdR5h29AkbA-ZjIiMGA
+Content-Type: application/json
+
+##### update basic user information complementary con base ene le token
+PUT https://backapijobs-production-ad45.up.railway.app/api/v1/users
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIsImVtYWlsIjoibWF5cmFiZmVybmFuZGV6MkBnbWFpbC5jb20iLCJpYXQiOjE2NzcxNDA2MTcsImV4cCI6MTY3NzUwMDYxN30.ltflQLVAUryeuMmCpUUBbDl2BTxCAVONHjqnjWfYsHgzIUoR7afFr12aErs5TsY7l0ty_g66yQNI3NCSEwA_Mg
+Content-Type: application/json
+
+{   
+    "firstname": null
+}
+
+### get all users
+GET https://backapijobs-production-ad45.up.railway.app/api/v1/users/all
+Content-Type: application/json
+
+
+### get un usuario particular con base en su id
+GET https://backapijobs-production-ad45.up.railway.app/api/v1/users/22
+Content-Type: application/json
+
+### delete un usuario con base en el token
+DELETE https://backapijobs-production-ad45.up.railway.app/api/v1/users
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJzaHVsdHoxMkBnbWFpbC5jb20iLCJpYXQiOjE2NzY0Njc4NDMsImV4cCI6MTY3NjgyNzg0M30.UCVHS84x1HF5kMbjZbhutOOIo4q9OEbaTohBmNSN-4TTn22wzw8D9dx7_hjpKDvG7VqDVajed80xiY3-zCyIxA
+Content-Type: application/json
+
+### requerimiento para los roles y las tecnologias relacionadas
+GET https://backapijobs-production-ad45.up.railway.app/api/v1/rol
+
+
+### Get all Jobs
+GET https://backapijobs-production-ad45.up.railway.app/api/v1/jobs?page=0&size=5
+
+
+### Get un trabajo en particular
+GET https://backapijobs-production-ad45.up.railway.app/api/v1/jobs/2
+
+###
+GET https://backapijobs-production-ad45.up.railway.app/api/v1/rol
+
+### todas las postulaciones de un usuario
+GET https://backapijobs-production-ad45.up.railway.app/api/v1/postulation/user
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJzaHVsdHoxMkBnbWFpbC5jb20iLCJpYXQiOjE2NzY0MjU1MTMsImV4cCI6MTY3Njc4NTUxM30.kXVJaLRIe51BgyJsII_X-BL4JLIcI-Gd1FIy9lzZzS0QP5O_x9SglOM496_rXGhBvMYjOEvXtvNZJ4OTSNjCtg
+Content-Type: application/json
+
+### todas las tecnologias
+GET https://backapijobs-production-ad45.up.railway.app/api/v1/tecnology
+Content-Type: application/json
+
+### eliminar una tecnologia
+DELETE https://backapijobs-production-ad45.up.railway.app/api/v1/tecnology/6
+Content-Type: application/json
+
+
+### crear tecnologias
+POST https://backapijobs-production-ad45.up.railway.app/api/v1/tecnology
+Content-Type: application/json
+
+{
+"name":"GIMP" 
+} 
+
+
+### crear tecnologia asociada a un rol
+POST https://backapijobs-production-ad45.up.railway.app/api/v1/rol_and_tecnology
+Content-Type: application/json
+
+{
+"rol_id":3,
+"tecnology_id":11
+} 
+
