@@ -114,6 +114,7 @@ export const CustomInput = ({
 
 const styles = StyleSheet.create({
   field: {
+    width: "85%",
     marginVertical: 5,
     marginHorizontal: 30,
   },

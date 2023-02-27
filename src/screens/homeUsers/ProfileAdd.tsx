@@ -9,6 +9,7 @@ import { FiveScreen } from "../../components/pages/profile/FiveScreen";
 import { FirstRecruiter } from "../../components/pages/profile/Recruiter/FirstRecruiter";
 import { SecondRecruiter } from "../../components/pages/profile/Recruiter/RecluiterLogin/SecondRecruiter";
 import { UserContext } from "../../GlobalStates/userContext";
+import { NewScreen } from "../../components/pages/profile/user/NewScreen";
 
 type Props = {};
 

@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  Image,
 } from "react-native";
-
+import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { COLORS } from "../../constants";
+import { UserContext } from "../../GlobalStates/userContext";
 
 type Props = {};
 
@@ -34,7 +37,17 @@ export const SelectDropdown = ({
         onPress={() => setShowOption(!showOption)}
         activeOpacity={0.7}
       >
-        <Text>{!value ? "Seleccionar una opción" : value}</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          {!value ? <AntDesign name="search1" size={18} /> : ""}
+          <Text style={{ marginHorizontal: 5 }}>
+            {!value ? "Seleccionar una opción" : value}
+          </Text>
+        </View>
         <FontAwesome
           name={showOption ? "chevron-up" : "chevron-down"}
           size={14}
@@ -56,7 +69,8 @@ export const SelectDropdown = ({
                   onPress={() => onSelectItem(rol)}
                   style={{
                     ...styles.dropDownItem,
-                    backgroundColor: rol.name === value ? "orange" : " orange",
+                    backgroundColor: rol.name === value ? "red" : "",
+
                     marginBottom: 4,
                   }}
                 >
@@ -81,6 +95,9 @@ export const MultipleSelectDropdown = ({
   const [isChange, setIsChange] = useState(false);
   const [valuesSelected, setValuesSelected] = useState(values);
   const [showSelectedItems, setShowSelectedItems] = useState(values.length > 0);
+  const [error, setError] = useState(false);
+
+  const { selectedStack, setSelectedStack } = useContext(UserContext);
 
   const onSelectItems = (item) => {
     setIsChange(!isChange);
@@ -89,10 +106,26 @@ export const MultipleSelectDropdown = ({
     if (index !== -1) {
       valuesSelected.splice(index, 1);
     } else {
-      valuesSelected.push(item);
+      if (selectedStack.length < 4) {
+        setError(false);
+        valuesSelected.push(item);
+      } else {
+        setError(true);
+        setTimeout(() => {
+          setError(false);
+        }, 4000);
+      }
     }
 
     setValuesSelected(valuesSelected);
+  };
+
+  console.log(valuesSelected.map((value) => value.name));
+
+  const removeItem = (name: string) => {
+    setValuesSelected(
+      valuesSelected.filter((value: string) => value.name !== name)
+    );
   };
 
   const onCloseSelection = () => {
@@ -100,7 +133,7 @@ export const MultipleSelectDropdown = ({
     setShowOption(!showOption);
   };
 
-  useEffect(() => {}, [isChange]);
+  useEffect(() => {}, [isChange, removeItem]);
 
   return (
     <View style={styles.container}>
@@ -109,7 +142,13 @@ export const MultipleSelectDropdown = ({
         onPress={() => onCloseSelection()}
         activeOpacity={0.7}
       >
-        <Text>{"Seleccionar hasta 4 opciones"}</Text>
+        {error ? (
+          <Text style={{ marginLeft: 5, color: COLORS.danger }}>
+            {"Solo puedes seleccionar hasta 4 opciones"}
+          </Text>
+        ) : (
+          <Text style={{ marginLeft: 5 }}>{"Selecciona hasta 4 opciones"}</Text>
+        )}
         <FontAwesome
           name={showOption ? "chevron-up" : "plus-square-o"}
           size={18}
@@ -118,67 +157,69 @@ export const MultipleSelectDropdown = ({
       </TouchableOpacity>
 
       {showOption && (
-        <View style={styles.dropDownGroup}>
+        <View style={styles.dropDownGroupMulti}>
           <ScrollView
             showsVerticalScrollIndicator={true}
             keyboardShouldPersistTaps="handled"
           >
-            {inData.map((rol, i) => {
-              return (
-                <TouchableOpacity
-                  key={rol.id}
-                  onPress={() => {
-                    onSelectItems(rol);
-                  }}
-                  style={styles.dropDownItems}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "flex-start",
+            {inData &&
+              inData.length > 0 &&
+              inData.map((rol, i) => {
+                return (
+                  <TouchableOpacity
+                    key={rol.id}
+                    onPress={() => {
+                      onSelectItems(rol);
                     }}
+                    style={styles.dropDownItems}
                   >
-                    {valuesSelected.some((val) => val.id == rol.id) ? (
-                      <Ionicons
-                        name="checkbox"
-                        size={18}
-                        color={COLORS.label}
-                        style={{ marginRight: 5 }}
-                      />
-                    ) : (
-                      <MaterialCommunityIcons
-                        name="checkbox-blank-outline"
-                        size={18}
-                        color="black"
-                        style={{ marginRight: 5 }}
-                      />
-                    )}
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "flex-start",
+                        marginRight: 30,
+                      }}
+                    >
+                      {valuesSelected.some((val) => val.id == rol.id) ? (
+                        <Ionicons
+                          name="checkbox"
+                          size={22}
+                          color={COLORS.label}
+                          style={{ marginRight: 5 }}
+                        />
+                      ) : (
+                        <MaterialCommunityIcons
+                          name="checkbox-blank-outline"
+                          size={22}
+                          color="black"
+                          style={{ marginRight: 5 }}
+                        />
+                      )}
 
-                    <Text>{rol.name}</Text>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
+                      <Text>{rol.name}</Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
           </ScrollView>
         </View>
       )}
 
-      {/* Donde se muestran los valores seleccionados */}
-      {/* {showSelectedItems && ( */}
       <View style={styles.selectedGroup}>
-        <Text> Estos son los valores seleccionados</Text>
-        <Text> hay seleccionados ({valuesSelected.length})</Text>
         <View style={styles.itemsContainer}>
-          {valuesSelected.map((value) => {
+          {valuesSelected.map((value: any) => {
             return (
-              <TouchableOpacity
-                key={value.id}
-                style={styles.selectedItems}
-                onPress={() => onSelectItems(value)}
-              >
-                <Text style={styles.mr10}>{value.name}</Text>
-                <FontAwesome name={"times"} size={14} color={COLORS.label} />
-              </TouchableOpacity>
+              <View style={styles.chip} key={value.id}>
+                <Text style={styles.chipText}>{value.name}</Text>
+
+                <TouchableOpacity
+                  onPress={() => {
+                    removeItem(value.name);
+                  }}
+                >
+                  <MaterialIcons name="cancel" size={22} color="white" />
+                </TouchableOpacity>
+              </View>
             );
           })}
         </View>
@@ -190,6 +231,8 @@ export const MultipleSelectDropdown = ({
 const styles = StyleSheet.create({
   container: {
     width: "100%",
+    height: "100%",
+    position: "relative",
   },
 
   // estilos para el input select
@@ -197,16 +240,37 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    height: 56,
+    height: 50,
+    width: "100%",
     borderRadius: 16,
-    backgroundColor: "#F7F6F5", // color del input select
+    backgroundColor: COLORS.white,
     padding: 14,
-    minHeight: 42,
+    minHeight: 32,
     marginBottom: 2,
   },
 
   // estilos para los elementos a seleccionar
   dropDownGroup: {
+    width: "100%",
+
+    backgroundColor: COLORS.skyColor,
+    borderRadius: 16,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 4,
+      height: 4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 4,
+    padding: 15,
+    marginVertical: 4,
+    maxHeight: 164,
+    zIndex: 100,
+  },
+
+  dropDownGroupMulti: {
+    width: "100%",
     backgroundColor: "#E3E5FA",
     borderRadius: 16,
     shadowColor: "#000",
@@ -220,6 +284,7 @@ const styles = StyleSheet.create({
     padding: 15,
     marginVertical: 4,
     maxHeight: 164,
+    zIndex: 100,
   },
 
   // estilos para el elemento seleccionado
@@ -233,33 +298,49 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 15,
     marginVertical: 4,
-    backgroundColor: COLORS.inputBg,
+    backgroundColor: "#E3E5FA",
   },
 
   // estilos para el grupo seleccionado
   selectedGroup: {
-    padding: 15,
-    marginVertical: 4,
-    backgroundColor: COLORS.grayLight,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 10,
+    position: "relative",
   },
   // estilos para el elementos seleccionados e y mostrado abajo
   selectedItems: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
     paddingVertical: 5,
     paddingHorizontal: 10,
     marginHorizontal: 4,
-
     borderRadius: 10,
   },
-  mr10: {
-    marginRight: 10,
-  },
+
   itemsContainer: {
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     flexWrap: "wrap",
-    marginTop: 15,
+    height: "100%",
+    marginTop: "5%",
+  },
+  chip: {
+    width: "35%",
+    height: 50,
+    backgroundColor: "#27358F",
+    borderWidth: 1,
+    borderColor: "#B3B5C4",
+    borderRadius: 8,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 8,
+    margin: 5,
+  },
+  chipText: {
+    color: "#FFFFFF",
+    fontSize: 14,
+    fontWeight: "bold",
   },
 });

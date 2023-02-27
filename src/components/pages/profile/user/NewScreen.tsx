@@ -14,11 +14,9 @@ import { Entypo } from "@expo/vector-icons";
 import { SelectList } from "react-native-dropdown-select-list";
 import { UserContext } from "../../../../GlobalStates/userContext";
 import { SelectDropdown } from "../../../common/CustomSelectDropdown";
-import { CustomTextArea } from "../../../common";
-import { useForm } from "react-hook-form";
+import { CustomInput, CustomTextArea } from "../../../common";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { COLORS } from "../../../../constants";
-import CustomInputNumber from "./CustomInputNumber";
+import { useForm } from "react-hook-form";
 
 type Direction = {
   direction: "next" | "prev";
@@ -29,16 +27,10 @@ type Props = {
   handleGoTo: (direction: Direction) => void;
 };
 
-export const SecondScreen = ({ step, handleGoTo }: Props) => {
-  const {
-    selectedRol,
-    setselectedRol,
-    data,
-    experience,
-    setExperience,
-    description,
-    setDescription,
-  } = useContext(UserContext);
+export const NewScreen = ({ step, handleGoTo }: Props) => {
+  const { selectedRol, setselectedRol, data } = useContext(UserContext);
+
+  console.log(data);
 
   const [error, setError] = useState(false);
 
@@ -70,102 +62,51 @@ export const SecondScreen = ({ step, handleGoTo }: Props) => {
     console.log("regresar");
   };
   const handleNext = () => {
-    if (selectedRol && experience) {
-      handleGoTo("next");
-    } else {
-      setError(true);
-      setTimeout(() => {
-        setError(false);
-      }, 3000);
-    }
+    handleGoTo("next");
   };
 
   //Si se vuelve a esta pagina restablecer el rol porque se da a entender que quiere cambiarlo
   useEffect(() => {
     setselectedRol(null);
-    console.log(description);
+    console.log(rols);
   }, []);
-
-  const handleBlurEdad = (value) => {
-    setExperience(value);
-  };
 
   type FormValues = {
     empresa: string;
     descripcion: string;
   };
 
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm<FormValues>({
-    defaultValues: {},
-  });
-
   return (
     <View style={styles.container}>
       <ScrollView style={styles.menu}>
         <View>
-          <Text style={styles.titleText}>¿A qué te dedicas?</Text>
+          <Text style={styles.titleText}>¿A que te dedicas?</Text>
           <Text style={styles.descriptionText}>
-            Cuentanos cual es el rol que mas te identifica (selecciona solo uno)
+            Escribe una breve descripcion de ti para completar aun mas tu
+            perfil.
           </Text>
 
           <View style={styles.inputContainer}>
-            {selectedRol ? (
-              <View>
-                <View style={styles.info}>
-                  <View style={{ left: 10 }}>
-                    <FontAwesome5
-                      onPress={() => setselectedRol("")}
-                      name="arrow-left"
-                      size={24}
-                      color="white"
-                    />
-                  </View>
-                  <Text style={{ color: "white", left: 20 }}>
-                    {selectedRol ? selectedRol : ""}
-                  </Text>
-                </View>
-                {experience ? (
-                  <View>
-                    <View style={styles.info}>
-                      <View style={{ left: 10 }}>
-                        <FontAwesome5
-                          onPress={() => setExperience(0)}
-                          name="arrow-left"
-                          size={24}
-                          color="white"
-                        />
-                      </View>
-                      <Text style={{ color: "white", left: 20 }}>
-                        {experience + " " + "años de experiencia"}
-                      </Text>
-                    </View>
-                    <CustomTextArea
-                      title=""
-                      placeholder="Cuentanos un poco acerca de ti"
-                      value={description}
-                    />
-                  </View>
-                ) : (
-                  <View>
-                    <View style={{ marginTop: 20 }}>
-                      <CustomInputNumber onBlur={handleBlurEdad} />
-                    </View>
-                  </View>
-                )}
+            <View style={styles.info}>
+              <View style={{ left: 10 }}>
+                <FontAwesome5 name="arrow-left" size={24} color="white" />
               </View>
-            ) : (
-              <View style={{ maxWidth: "95%", marginHorizontal: -10 }}>
-                <SelectDropdown
-                  data={rols}
-                  onSelect={setselectedRol}
-                  value={selectedRol}
-                />
+              <Text style={{ color: "white", left: 20 }}>
+                {selectedRol ? selectedRol : "Backend Developer"}
+              </Text>
+            </View>
+            <View style={styles.info}>
+              <View style={{ left: 10 }}>
+                <FontAwesome5 name="arrow-left" size={24} color="white" />
               </View>
-            )}
+              <Text style={{ color: "white", left: 20 }}>
+                {selectedRol ? selectedRol : "10 años de experiencía"}
+              </Text>
+            </View>
+            <CustomTextArea
+              title=""
+              placeholder="Cuentanos un poco acerca de ti"
+            />
           </View>
         </View>
       </ScrollView>
@@ -210,7 +151,7 @@ export const SecondScreen = ({ step, handleGoTo }: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5F6F7",
+    backgroundColor: "#EBEDF0",
   },
 
   menu: {
@@ -257,10 +198,9 @@ const styles = StyleSheet.create({
     zIndex: 100,
     width: "100%",
     marginTop: 10,
-    paddingHorizontal: 25,
+    paddingHorizontal: 20,
     paddingVertical: 10,
   },
-
   info: {
     flexDirection: "row",
     alignItems: "center",
@@ -393,9 +333,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   buttonStyles: {
-    flexDirection: "row",
-    alignContent: "center",
-    width: 80,
+    width: 70,
     height: 56,
     backgroundColor: "#0E1545",
     borderRadius: 16,
